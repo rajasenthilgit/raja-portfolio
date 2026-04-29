@@ -10,7 +10,6 @@ function App() {
       <Hero />
       <Skills />
       <Projects />
-      <h1> ewfaipfjpaofji</h1>
     </div>
   );
 }
