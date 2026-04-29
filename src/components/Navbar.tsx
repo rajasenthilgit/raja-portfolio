@@ -36,7 +36,8 @@ export default function Navbar() {
     { name: 'Projects', href: '#projects', icon: FolderGit2 },
   ];
 
-  const handleClick = (e, href) => {
+  // Fixed: Added proper TypeScript types
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
