@@ -54,7 +54,7 @@ export default function Navbar() {
   // Function to download resume
   const downloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/Raja_Resume.pdf.pdf';
+    link.href = '/Raja_Resume.pdf';
     link.download = 'Raja_Senthilkumar_Resume.pdf';
     document.body.appendChild(link);
     link.click();
