@@ -48,7 +48,7 @@ export default function Navbar() {
 
   // Function to open resume in new tab
   const openResume = () => {
-    window.open('/RAJA_FrontEnd 3 +.pdf', '_blank');
+    window.open('/RAJA_FrontEnd 3 +.pdf', '_blank');//new file uploaded 
   };
 
   // Function to download resume
