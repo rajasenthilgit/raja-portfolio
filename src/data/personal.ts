@@ -1,10 +1,10 @@
 export const personalInfo = {
   name: "Raja Senthilkumar",
-  title: "Full Stack Developer",
+  title: "FrontEnd Developer",
   email: "raja2001ece@gmail.com",
   phone: "+91 9952846346",
   location: "Puducherry, India",
-  summary: "Skilled and versatile Full Stack Developer with over 3+ years of hands-on experience in building and scaling modern web applications. Specializes in React.js and the MERN stack with proven capabilities in backend integrations, real-time analytics, and secure payments.\n\n" +
+  summary: "Skilled and versatile FrontEnd Developer with over 3+ years of hands-on experience in building and scaling modern web applications. Specializes in React.js and the MERN stack with proven capabilities in backend integrations, real-time analytics, and secure payments.\n\n" +
     "Experienced in developing enterprise-grade solutions including E-Learning Management Systems (ULCMS), real-time fleet monitoring platforms (FleetTrack), and SaaS document analysis tools (Go Perla). Proficient in modern authentication mechanisms including Keycloak, AWS Cognito, and JWT with RBAC implementation.\n\n" +
     "Technical expertise spans React.js, Next.js, TypeScript for frontend development, Node.js, Express.js, GraphQL for backend services, and PostgreSQL, MongoDB for database management. Familiar with DevOps practices including Docker,  and AWS services. Strong advocate of Agile/Scrum methodologies with experience in sprint planning, code reviews, and task tracking using Jira."
 };

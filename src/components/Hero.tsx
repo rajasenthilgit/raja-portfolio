@@ -1,15 +1,48 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Check } from 'lucide-react';
 import { personalInfo } from '../data/personal';
-import profileImage from '../assets/Media.jpeg';
+import profileImage from '../assets/raja_profile.png';
+
+// Inline LinkedIn icon (lucide-react removed brand icons in recent versions)
+const LinkedinIcon = ({ size = 18, className = '' }: { size?: number; className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+  >
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+  </svg>
+);
 
 export default function Hero() {
   const [activeTab, setActiveTab] = useState(0);
+  const [copied, setCopied] = useState<'email' | 'phone' | null>(null);
+
+  const handleCopy = async (text: string, type: 'email' | 'phone') => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 2000);
+    }
+  };
 
   const tabs = [
     {
       title: "💼 Professional Background",
-      content: "Skilled and versatile Full Stack Developer with over 3+ years of hands-on experience in building and scaling modern web applications. Specializes in React.js and the MERN stack with proven capabilities in backend integrations, real-time analytics, and secure payments.\n\nExperienced in developing enterprise-grade solutions including E-Learning Management Systems (ULCMS), real-time fleet monitoring platforms (FleetTrack), and SaaS document analysis tools (Go Perla)."
+      content: "Skilled and versatile FrontEnd Developer with over 3+ years of hands-on experience in building and scaling modern web applications. Specializes in React.js and the MERN stack with proven capabilities in backend integrations, real-time analytics, and secure payments.\n\nExperienced in developing enterprise-grade solutions including E-Learning Management Systems (ULCMS), real-time fleet monitoring platforms (FleetTrack), and SaaS document analysis tools (Go Perla)."
     },
     {
       title: "🔐 Security & Authentication",
@@ -30,20 +63,19 @@ export default function Hero() {
           <div className="lg:w-1/3 flex justify-center lg:justify-start">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-              <img 
+              <img
                 src={profileImage}
                 alt={personalInfo.name}
-                className="w-48 h-48 lg:w-56 lg:h-56 rounded-full object-cover border-4 border-white shadow-2xl relative z-10 hover:scale-105 transition-transform duration-300"
+                className="w-48 h-48 lg:w-56 lg:h-56 rounded-full object-cover object-top border-4 border-white shadow-2xl relative z-10 hover:scale-105 transition-transform duration-300"
                 onError={(e) => {
                   e.currentTarget.src = `https://ui-avatars.com/api/?name=${personalInfo.name.replace(' ', '+')}&background=4F46E5&color=fff&size=200&bold=true`;
                 }}
               />
-              {/* Decorative ring */}
               <div className="absolute inset-0 rounded-full border-4 border-transparent group-hover:border-blue-400 transition-all duration-300"></div>
             </div>
           </div>
 
-          {/* Details Section - Center aligned */}
+          {/* Details Section */}
           <div className="lg:w-2/3 text-center lg:text-left">
             <div className="space-y-4">
               <div className="inline-block animate-pulse">
@@ -51,29 +83,76 @@ export default function Hero() {
                   👋 Welcome to my portfolio
                 </span>
               </div>
-              
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {personalInfo.name}
               </h1>
-              
+
               <p className="text-xl md:text-2xl text-blue-600 dark:text-blue-400 font-semibold">
                 {personalInfo.title}
               </p>
-              
+
               {/* Contact Info */}
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
+                {/* LinkedIn - same style as others */}
+                <a
+                  href="https://www.linkedin.com/in/raja2001/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Open LinkedIn profile"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all group relative hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                >
+                  <LinkedinIcon size={18} className="text-blue-500 group-hover:text-blue-600" />
+                  <span className="text-gray-700 dark:text-gray-300">LinkedIn</span>
+                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    Visit profile
+                  </span>
+                </a>
+                {/* Email - Click to copy */}
+                <button
+                  onClick={() => handleCopy(personalInfo.email, 'email')}
+                  title="Click to copy email"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer group relative"
+                >
+                  {copied === 'email' ? (
+                    <Check size={18} className="text-green-500" />
+                  ) : (
+                    <Mail size={18} className="text-blue-500 group-hover:text-blue-600" />
+                  )}
+                  <span className="text-gray-700 dark:text-gray-300">
+                    {copied === 'email' ? 'Copied!' : personalInfo.email}
+                  </span>
+                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {copied === 'email' ? 'Copied to clipboard!' : 'Click to copy'}
+                  </span>
+                </button>
+
+                {/* Phone - Click to copy */}
+                <button
+                  onClick={() => handleCopy(personalInfo.phone, 'phone')}
+                  title="Click to copy phone"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer group relative"
+                >
+                  {copied === 'phone' ? (
+                    <Check size={18} className="text-green-500" />
+                  ) : (
+                    <Phone size={18} className="text-blue-500 group-hover:text-blue-600" />
+                  )}
+                  <span className="text-gray-700 dark:text-gray-300">
+                    {copied === 'phone' ? 'Copied!' : personalInfo.phone}
+                  </span>
+                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {copied === 'phone' ? 'Copied to clipboard!' : 'Click to copy'}
+                  </span>
+                </button>
+
+                {/* Location */}
                 <div className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all">
-                  <Mail size={18} className="text-blue-500" /> 
-                  <span className="text-gray-700 dark:text-gray-300">{personalInfo.email}</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all">
-                  <Phone size={18} className="text-blue-500" /> 
-                  <span className="text-gray-700 dark:text-gray-300">{personalInfo.phone}</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all">
-                  <MapPin size={18} className="text-blue-500" /> 
+                  <MapPin size={18} className="text-blue-500" />
                   <span className="text-gray-700 dark:text-gray-300">{personalInfo.location}</span>
                 </div>
+
+
               </div>
             </div>
           </div>
@@ -82,34 +161,28 @@ export default function Hero() {
         {/* Summary Section with Tabs */}
         <div className="mt-8 max-w-4xl mx-auto lg:mx-0">
           <div className="relative">
-            {/* Decorative quote icon */}
             <div className="absolute -top-6 -left-4 text-6xl text-blue-200 dark:text-blue-800 opacity-50 z-0">
               "
             </div>
-            
+
             <div className="bg-white/60 dark:bg-gray-800/40 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50 dark:border-gray-700/50 overflow-hidden">
-              {/* Tab Headers */}
               <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white/40 dark:bg-gray-800/60">
                 {tabs.map((tab, index) => (
                   <button
                     key={index}
                     onClick={() => setActiveTab(index)}
-                    className={`flex-1 px-4 py-3 text-sm md:text-base font-medium transition-all duration-300 ${
-                      activeTab === index
+                    className={`flex-1 px-4 py-3 text-sm md:text-base font-medium transition-all duration-300 ${activeTab === index
                         ? 'bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent border-b-2 border-purple-600 dark:border-purple-400'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                    }`}
+                      }`}
                   >
                     {tab.title}
                   </button>
                 ))}
               </div>
 
-              {/* Tab Content */}
               <div className="p-6 md:p-8 min-h-[280px]">
-                <div style={{
-                  animation: 'fadeIn 0.3s ease-out'
-                }}>
+                <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
                   <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {tabs[activeTab].title}
                   </h3>
@@ -121,18 +194,15 @@ export default function Hero() {
                 </div>
               </div>
             </div>
-            
-            {/* Decorative elements */}
+
             <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-2xl opacity-20"></div>
           </div>
         </div>
 
-        {/* Additional decorative elements */}
         <div className="fixed bottom-10 right-10 w-64 h-64 bg-gradient-to-r from-blue-300 to-purple-300 rounded-full blur-3xl opacity-10 pointer-events-none"></div>
         <div className="fixed top-20 left-10 w-72 h-72 bg-gradient-to-r from-indigo-300 to-blue-300 rounded-full blur-3xl opacity-10 pointer-events-none"></div>
       </div>
 
-      {/* Add this style tag in your global CSS file or component */}
       <style>{`
         @keyframes fadeIn {
           from {
